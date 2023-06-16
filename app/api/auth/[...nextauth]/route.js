@@ -11,18 +11,6 @@ const handler = NextAuth({
     }),
   ],
   callbacks: {
-    async session({ session }) {
-      console.log(session)
-      const sessionUser = await User.findOne({
-        email: session.user.email,
-      })
-      console.log(sessionUser)
-      console.log(email)
-      session.user.id = sessionUser._id.toString()
-
-      return session
-    },
-
     async signIn({ profile }) {
       console.log(profile)
       try {
@@ -43,7 +31,18 @@ const handler = NextAuth({
       } catch (error) {
         console.log(error)
       }
+      return true
     },
+  },
+  async session({ session }) {
+    console.log(session)
+    const sessionUser = await User.findOne({
+      email: session.user.email,
+    })
+    console.log(sessionUser)
+    console.log(email)
+    session.user.id = sessionUser._id.toString()
+    return session
   },
 })
 
